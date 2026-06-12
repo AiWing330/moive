@@ -226,7 +226,7 @@ h1 span { color: var(--accent); }
 <body>
 
 <!-- ── LOGIN OVERLAY ── -->
-<div class="login-overlay hidden" id="loginOverlay">
+<div class="login-overlay" id="loginOverlay">
   <div style="position:absolute;top:1.2rem;left:2rem;font-family:var(--font-mono);font-size:13px;letter-spacing:0.15em;color:var(--accent);cursor:pointer;background:none;border:none;" onclick="cancelLogin()">🎬 CINEMA</div>
   <div class="login-box">
     <div class="login-top">
@@ -315,18 +315,20 @@ h1 span { color: var(--accent); }
       <!-- Image -->
       <div class="form-group">
         <span class="form-label">封面圖片</span>
-        <div class="img-upload-area" id="uploadArea">
-          <input type="file" id="imgFile" accept="image/*">
-          <img id="imgPreview" class="img-preview" style="display:none">
-          <p class="img-upload-hint" id="uploadHint">拖曳或 <span>點擊上傳</span> 圖片</p>
+        <div style="background:var(--surface2);border:0.5px solid var(--border2);border-radius:6px;padding:12px 14px;margin-bottom:8px;font-size:12px;color:var(--muted);line-height:1.7">
+          💡 請先將圖片上傳到免費圖床，再貼網址：<br>
+          <a href="https://imgbb.com" target="_blank" style="color:var(--accent);text-decoration:none">imgbb.com</a> → 上傳圖片 → 複製「Direct link」貼到下方
         </div>
-        <div class="or-divider">— 或使用圖片網址 —</div>
+        <div id="imgPreviewWrap" style="display:none;margin-bottom:8px">
+          <img id="imgPreview" class="img-preview" style="max-height:160px;width:100%;object-fit:cover;border-radius:4px;border:0.5px solid var(--border2)">
+          <button onclick="clearImg()" style="margin-top:6px;background:none;border:none;color:var(--danger);font-size:12px;cursor:pointer;font-family:var(--font-mono)">✕ 移除圖片</button>
+        </div>
         <div class="img-url-row">
-          <input class="form-input" type="text" id="imgUrl" placeholder="https://example.com/image.jpg">
-          <button class="btn-ghost" onclick="applyImgUrl()" style="white-space:nowrap;font-size:12px">套用</button>
+          <input class="form-input" type="text" id="imgUrl" placeholder="https://i.ibb.co/xxx/poster.jpg">
+          <button class="btn-ghost" onclick="applyImgUrl()" style="white-space:nowrap;font-size:12px">預覽</button>
         </div>
-        <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
-          <span class="form-label" style="margin:0">或用 Emoji：</span>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+          <span class="form-label" style="margin:0;white-space:nowrap">或用 Emoji：</span>
           <input class="form-input" type="text" id="imgEmoji" placeholder="🎬" style="width:70px;text-align:center;font-size:20px">
         </div>
       </div>
@@ -771,13 +773,16 @@ function openForm(id = null) {
   buildGenreChecks(m?.genre || []);
 
   const preview = document.getElementById('imgPreview');
-  const hint = document.getElementById('uploadHint');
+  const wrap = document.getElementById('imgPreviewWrap');
   if (m?.image) {
-    preview.src = m.image; preview.style.display = 'block';
-    hint.style.display = 'none';
+    preview.src = m.image;
+    wrap.style.display = 'block';
+    document.getElementById('imgUrl').value = m.image;
     currentImgData = m.image;
   } else {
-    preview.style.display = 'none'; hint.style.display = 'block';
+    preview.src = '';
+    wrap.style.display = 'none';
+    document.getElementById('imgUrl').value = '';
   }
 
   document.getElementById('formOverlay').classList.add('open');
@@ -794,41 +799,17 @@ function applyImgUrl() {
   if (!url) return;
   currentImgData = url;
   const preview = document.getElementById('imgPreview');
-  preview.src = url; preview.style.display = 'block';
-  document.getElementById('uploadHint').style.display = 'none';
+  const wrap = document.getElementById('imgPreviewWrap');
+  preview.src = url;
+  wrap.style.display = 'block';
 }
 
-// file upload
-document.getElementById('imgFile').addEventListener('change', function() {
-  const file = this.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    currentImgData = e.target.result;
-    const preview = document.getElementById('imgPreview');
-    preview.src = currentImgData; preview.style.display = 'block';
-    document.getElementById('uploadHint').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-});
-
-// drag-drop on upload area
-const uploadArea = document.getElementById('uploadArea');
-uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-active'); });
-uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-active'));
-uploadArea.addEventListener('drop', e => {
-  e.preventDefault(); uploadArea.classList.remove('drag-active');
-  const file = e.dataTransfer.files[0];
-  if (!file || !file.type.startsWith('image/')) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    currentImgData = ev.target.result;
-    const preview = document.getElementById('imgPreview');
-    preview.src = currentImgData; preview.style.display = 'block';
-    document.getElementById('uploadHint').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-});
+function clearImg() {
+  currentImgData = null;
+  document.getElementById('imgUrl').value = '';
+  document.getElementById('imgPreview').src = '';
+  document.getElementById('imgPreviewWrap').style.display = 'none';
+}
 
 async function saveMovie() {
   const title = document.getElementById('fTitle').value.trim();
