@@ -622,7 +622,7 @@ function renderGrid() {
     <article class="card" style="animation-delay:${i*0.05}s" onclick="openModal(${m.id})">
       <div class="card-poster">
         <div class="card-poster-inner ${!m.image ? 'emoji-mode' : ''}" style="${!m.image ? `background:${m.color||COLORS[0]}` : ''}">
-          ${m.image ? `<img src="${m.image}" alt="${m.title}" style="width:100%;height:100%;object-fit:cover">` : (m.emoji || '🎬')}
+          ${m.image ? `<img src="${m.image}" alt="${m.title}" style="width:100%;height:100%;object-fit:contain;background:#000">` : (m.emoji || '🎬')}
         </div>
         <span class="card-year-badge">${m.year||''}</span>
         <span class="card-rating">${stars(m.rating||5)}</span>
@@ -648,7 +648,7 @@ function openModal(id) {
   modal.innerHTML = `
     <div class="modal-top">
       ${m.image
-        ? `<img src="${m.image}" alt="${m.title}" class="modal-top-img">`
+        ? `<img src="${m.image}" alt="${m.title}" class="modal-top-img" style="object-fit:contain;background:#000">`
         : `<div class="modal-top-bg" style="background:${m.color||COLORS[0]}"></div><span class="modal-top-emoji">${m.emoji||'🎬'}</span>`
       }
       <button class="modal-close" onclick="closeModal()">✕</button>
