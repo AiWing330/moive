@@ -630,7 +630,7 @@ function renderGrid() {
       <div class="card-body">
         <div class="card-genre-row">${(m.genre||[]).map(g=>`<span class="genre-tag gt-${g}">${g}</span>`).join('')}</div>
         <h2 class="card-title">${m.title}</h2>
-        <p class="card-director">${m.director ? '導演：'+m.director : ''}</p>
+        <p class="card-director">${m.synopsis ? m.synopsis.substring(0,40)+'…' : ''}</p>
       </div>
       <span class="card-arrow">→</span>
     </article>`).join('');
