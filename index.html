@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>人生放映中</title>
+<title>電影探索</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -23,8 +23,8 @@ body::before {
 }
 
 /* ── LOGIN ── */
-.login-overlay { position: fixed; inset: 0; background: rgba(10,10,15,0.97); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 2rem; }
-.login-overlay.hidden { display: none !important; }
+.login-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+.login-overlay.hidden { display: none; }
 .login-box { background: var(--surface); border: 0.5px solid var(--border2); border-radius: 10px; width: 100%; max-width: 380px; overflow: hidden; }
 .login-top { padding: 2.5rem 2rem 1.5rem; text-align: center; border-bottom: 0.5px solid var(--border); }
 .login-icon { font-size: 36px; display: block; margin-bottom: 1rem; }
@@ -62,8 +62,7 @@ body::before {
    FRONT-END
 ══════════════════════════════ */
 header {
-  position: relative; padding: 2rem 2rem 1.5rem; text-align: center; overflow: hidden;
-}
+  position: relative; padding: 5rem 2rem 3.5rem; text-align: center; overflow: hidden;
 }
 header::before {
   content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
@@ -73,9 +72,9 @@ header::before {
 h1 { font-size: clamp(2.5rem, 7vw, 5.5rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; }
 h1 span { color: var(--accent); }
 .header-sub { margin-top: 1rem; font-size: 15px; color: var(--muted); }
-.header-line { width: 40px; height: 1px; background: var(--accent); margin: 0.75rem auto 0; }
+.header-line { width: 40px; height: 1px; background: var(--accent); margin: 1.75rem auto 0; }
 
-.filters-wrap { padding: 0 2rem 1rem; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.filters-wrap { padding: 0 2rem 2.5rem; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .filter-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; color: var(--muted); margin-right: 4px; }
 .filter-btn { background: transparent; border: 0.5px solid var(--border2); border-radius: 100px; padding: 6px 16px; font-family: var(--font-serif); font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.2s; }
 .filter-btn:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
@@ -227,7 +226,7 @@ h1 span { color: var(--accent); }
 <body>
 
 <!-- ── LOGIN OVERLAY ── -->
-<div class="login-overlay hidden" id="loginOverlay">
+<div class="login-overlay" id="loginOverlay">
   <div style="position:absolute;top:1.2rem;left:2rem;font-family:var(--font-mono);font-size:13px;letter-spacing:0.15em;color:var(--accent);cursor:pointer;background:none;border:none;" onclick="cancelLogin()">🎬 CINEMA</div>
   <div class="login-box">
     <div class="login-top">
@@ -256,7 +255,7 @@ h1 span { color: var(--accent); }
 
 <!-- ── NAV ── -->
 <nav class="nav">
-  <button class="nav-logo" onclick="switchPage('front')"><img src="https://i.ibb.co/0yT6Pw9v/moive-logo03.webp" style="height:28px;object-fit:contain"></button>
+  <button class="nav-logo" onclick="switchPage('front')">🎬 CINEMA</button>
   <div class="nav-tabs" id="navTabs">
     <button class="nav-tab active" onclick="switchPage('front')">電影展示</button>
     <button class="nav-tab" onclick="goAdmin()">後台管理</button>
@@ -270,8 +269,8 @@ h1 span { color: var(--accent); }
 <div id="page-front" class="page active">
   <header>
     <span class="site-label">Cinema Archive · 電影典藏</span>
-    <img src="https://i.ibb.co/CKqgF97H/moive-logo01.webp" style="max-width:600px;width:90%;object-fit:contain">
-    <p class="header-sub">潛意識是導演，回憶是底片，而我們，每日都在【人生放映中】。</p>
+    <h1>探索<span>電影</span></h1>
+    <p class="header-sub">精選經典與當代佳作，為你的下一個夜晚挑一部好片</p>
     <div class="header-line"></div>
   </header>
   <div class="filters-wrap" id="filtersWrap">
@@ -631,7 +630,7 @@ function renderGrid() {
       <div class="card-body">
         <div class="card-genre-row">${(m.genre||[]).map(g=>`<span class="genre-tag gt-${g}">${g}</span>`).join('')}</div>
         <h2 class="card-title">${m.title}</h2>
-        <p class="card-director">${m.synopsis ? m.synopsis.substring(0,40)+'…' : ''}</p>
+        <p class="card-director">${m.director ? '導演：'+m.director : ''}</p>
       </div>
       <span class="card-arrow">→</span>
     </article>`).join('');
